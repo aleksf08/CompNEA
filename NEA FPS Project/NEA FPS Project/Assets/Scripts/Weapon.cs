@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class Weapon : MonoBehaviour
@@ -11,26 +12,45 @@ public class Weapon : MonoBehaviour
     //Bullet variables
     public GameObject bulletPrefab;
     public GameObject firepoint;
-    public float bulletVelocity = 30f;
     public float bulletPrefabLife = 2f;
+    public float bulletVelocity = 30f;
+
+
+    //Reload variables
+    public float reloadTime = 0.5f;
+    public int magSize = 6, currentAmmo, tempAmmo;
+    bool magRemoved = false;
+    private bool isReloading = false;
+    
 
     void Awake()
     {
         shootingDisabled = false;
+
+        currentAmmo = magSize;
     }
 
     void Update()
     {
-        
+
         if (!shootingDisabled && Input.GetKeyDown(KeyCode.Mouse0))
         {
             FireWeapon();
+        }
+        if (Input.GetKeyDown(KeyCode.R) && !isReloading)
+        {
+            StartCoroutine(Reload());
+        }
+        if (currentAmmo <= 0)
+        {
+            shootingDisabled = true;
         }
     }
 
     private void FireWeapon()
     {
         shootingDisabled = true;
+        currentAmmo--;
 
         // Get the camera
         Camera cam = Camera.main;
@@ -57,8 +77,54 @@ public class Weapon : MonoBehaviour
 
 
     }
+
     
-    void ResetShooting()
+    private IEnumerator Reload()
+    {
+        isReloading = true;
+        shootingDisabled = true;
+
+        // Remove magazine
+        magRemoved = true;
+        tempAmmo = 0;
+        Debug.Log("Magazine removed");
+
+        // While mag is removed, let player press F to add bullets and G to insert mag
+        while (magRemoved)
+        {
+            if (Input.GetKeyDown(KeyCode.F) && (currentAmmo + tempAmmo) < magSize)
+            {
+                tempAmmo += 1;
+                Debug.Log("Bullet loaded into magazine. tempAmmo=" + tempAmmo);
+            }
+
+            if (Input.GetKeyDown(KeyCode.G))
+            {
+                currentAmmo = Mathf.Min(currentAmmo + tempAmmo, magSize);
+                tempAmmo = 0;
+                magRemoved = false;
+                Debug.Log("Magazine inserted. Ammo=" + currentAmmo);
+            }
+            yield return null;
+        }
+
+        // Wait for cock input H
+        bool cocked = false;
+        while (!cocked)
+        {
+            if (Input.GetKeyDown(KeyCode.H))
+            {
+                cocked = true;
+                Debug.Log("Gun cocked");
+            }
+            yield return null;
+        }
+
+        shootingDisabled = false;
+        isReloading = false;
+    }
+
+    public void ResetShooting()
     {
         shootingDisabled = false;
     }
