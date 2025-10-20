@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityParticleSystem;
 
 public class Weapon : MonoBehaviour
 {
@@ -19,8 +20,12 @@ public class Weapon : MonoBehaviour
     //Reload variables
     public float reloadTime = 0.5f;
     public int magSize = 6, currentAmmo, tempAmmo;
-    bool magRemoved = false;
-    private bool isReloading = false;
+    public bool magRemoved = false, magEmpty = false, isReloading = false;
+
+    //MuzzleFlashEffect
+    public GameObject muzzleEffect;
+
+    
     
 
     void Awake()
@@ -33,22 +38,38 @@ public class Weapon : MonoBehaviour
     void Update()
     {
 
+        //shoot gun
         if (!shootingDisabled && Input.GetKeyDown(KeyCode.Mouse0))
         {
             FireWeapon();
         }
+
+        //reload gun
         if (Input.GetKeyDown(KeyCode.R) && !isReloading)
         {
             StartCoroutine(Reload());
         }
+
+        //ammo empty check
         if (currentAmmo <= 0)
         {
             shootingDisabled = true;
+            magEmpty = true;
+        }
+
+        //shooting with an empty mag
+        if (magEmpty == true && Input.GetKeyDown(KeyCode.Mouse0) && !isReloading)
+        {
+            Debug.Log("Mag empty (no ammo)");
+            //empty mag click sound
         }
     }
 
     private void FireWeapon()
     {
+        //play muzzleEffect animation
+        muzzleEffect GetComponent<ParticleSystem>() Play();
+
         shootingDisabled = true;
         currentAmmo--;
 
@@ -120,8 +141,9 @@ public class Weapon : MonoBehaviour
             yield return null;
         }
 
-        shootingDisabled = false;
+        Invoke("ResetShooting", shootDelay);
         isReloading = false;
+        magEmpty = false;
     }
 
     public void ResetShooting()
