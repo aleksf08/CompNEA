@@ -1,6 +1,6 @@
 using System.Collections;
 using UnityEngine;
-using UnityParticleSystem;
+
 
 public class Weapon : MonoBehaviour
 {
@@ -25,6 +25,9 @@ public class Weapon : MonoBehaviour
     //MuzzleFlashEffect
     public GameObject muzzleEffect;
 
+    //Animator
+    public Animator animator;
+
     
     
 
@@ -33,6 +36,8 @@ public class Weapon : MonoBehaviour
         shootingDisabled = false;
 
         currentAmmo = magSize;
+
+        animator = GetComponent<Animator>();
     }
 
     void Update()
@@ -68,8 +73,11 @@ public class Weapon : MonoBehaviour
     private void FireWeapon()
     {
         //play muzzleEffect animation
-        muzzleEffect GetComponent<ParticleSystem>() Play();
-
+        muzzleEffect.GetComponent<ParticleSystem>().Play();
+        //play recoil animation
+        animator.SetTrigger("RECOIL");
+        
+        // Deduct ammo and disable shooting
         shootingDisabled = true;
         currentAmmo--;
 
