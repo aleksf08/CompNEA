@@ -38,6 +38,8 @@ public class Weapon : MonoBehaviour
         currentAmmo = magSize;
 
         animator = GetComponent<Animator>();
+
+        
     }
 
     void Update()
