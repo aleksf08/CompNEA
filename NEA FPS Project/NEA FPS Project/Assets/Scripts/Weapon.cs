@@ -110,6 +110,7 @@ public class Weapon : MonoBehaviour
     
     private IEnumerator Reload()
     {
+        animator.SetTrigger("INSPECT");
         isReloading = true;
         shootingDisabled = true;
 
@@ -117,6 +118,8 @@ public class Weapon : MonoBehaviour
         magRemoved = true;
         tempAmmo = 0;
         Debug.Log("Magazine removed");
+        animator.SetTrigger("REMOVE MAG");
+
 
         // While mag is removed, let player press F to add bullets and G to insert mag
         while (magRemoved)
@@ -125,6 +128,7 @@ public class Weapon : MonoBehaviour
             {
                 tempAmmo += 1;
                 Debug.Log("Bullet loaded into magazine. tempAmmo=" + tempAmmo);
+                animator.SetTrigger("INSERT BULLET");
             }
 
             if (Input.GetKeyDown(KeyCode.G))
@@ -133,6 +137,7 @@ public class Weapon : MonoBehaviour
                 tempAmmo = 0;
                 magRemoved = false;
                 Debug.Log("Magazine inserted. Ammo=" + currentAmmo);
+                animator.SetTrigger("INSERT MAG");
             }
             yield return null;
         }
@@ -145,6 +150,7 @@ public class Weapon : MonoBehaviour
             {
                 cocked = true;
                 Debug.Log("Gun cocked");
+                animator.SetTrigger("COCK GUN");
             }
             yield return null;
         }
