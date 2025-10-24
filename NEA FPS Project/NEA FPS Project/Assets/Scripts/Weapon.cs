@@ -51,7 +51,7 @@ public class Weapon : MonoBehaviour
         }
 
         //reload gun
-        if (Input.GetKeyDown(KeyCode.R) && !isReloading)
+        if (Input.GetKeyDown(KeyCode.R) && !isReloading && currentAmmo < magSize)
         {
             isReloading = true;
             StartCoroutine(Reload());
@@ -123,22 +123,17 @@ public class Weapon : MonoBehaviour
 
 
         // While mag is removed, let player press F to add bullets and G to insert mag
-        while (magRemoved)
+        while (magRemoved == true)
         {
             if (Input.GetKeyDown(KeyCode.F) && (currentAmmo + tempAmmo) < magSize)
             {
                 tempAmmo += 1;
                 Debug.Log("Bullet loaded into magazine. tempAmmo=" + tempAmmo);
-
-                // Force restart the "insert bullet" animation every time F is pressed.
-                // Use the exact state name in your Animator ("Weapon Insert Bullet" in your screenshot)
+                animator.SetTrigger("INSERT BULLET");
                 animator.Play("Weapon Insert Bullet", 0, 0f);
-                // alternatively, if you prefer a Trigger param:
-                // animator.ResetTrigger("INSERT BULLET");
-                // animator.SetTrigger("INSERT BULLET");
             }
 
-            if (Input.GetKeyDown(KeyCode.G))
+            if (Input.GetKeyDown(KeyCode.G) && tempAmmo > 0)
             {
                 currentAmmo = Mathf.Min(currentAmmo + tempAmmo, magSize);
                 tempAmmo = 0;
