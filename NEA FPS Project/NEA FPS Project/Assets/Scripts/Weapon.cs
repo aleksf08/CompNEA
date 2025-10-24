@@ -44,7 +44,6 @@ public class Weapon : MonoBehaviour
 
     void Update()
     {
-
         //shoot gun
         if (!shootingDisabled && Input.GetKeyDown(KeyCode.Mouse0))
         {
@@ -54,6 +53,7 @@ public class Weapon : MonoBehaviour
         //reload gun
         if (Input.GetKeyDown(KeyCode.R) && !isReloading)
         {
+            isReloading = true;
             StartCoroutine(Reload());
         }
 
@@ -112,7 +112,6 @@ public class Weapon : MonoBehaviour
     
     private IEnumerator Reload()
     {
-        animator.SetTrigger("INSPECT");
         isReloading = true;
         shootingDisabled = true;
 
@@ -130,7 +129,13 @@ public class Weapon : MonoBehaviour
             {
                 tempAmmo += 1;
                 Debug.Log("Bullet loaded into magazine. tempAmmo=" + tempAmmo);
-                animator.SetTrigger("INSERT BULLET");
+
+                // Force restart the "insert bullet" animation every time F is pressed.
+                // Use the exact state name in your Animator ("Weapon Insert Bullet" in your screenshot)
+                animator.Play("Weapon Insert Bullet", 0, 0f);
+                // alternatively, if you prefer a Trigger param:
+                // animator.ResetTrigger("INSERT BULLET");
+                // animator.SetTrigger("INSERT BULLET");
             }
 
             if (Input.GetKeyDown(KeyCode.G))
