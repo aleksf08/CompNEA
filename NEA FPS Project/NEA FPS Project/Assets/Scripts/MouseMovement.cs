@@ -10,6 +10,9 @@ public class MouseMovement : MonoBehaviour
 
     public float topClamp = -90f;
     public float bottomClamp = 90f;
+
+
+    public PauseMenu pauseMenu;
     
     void Start()
     {
@@ -20,6 +23,12 @@ public class MouseMovement : MonoBehaviour
 
     void Update()
     {
+        //Prevent mouse movement when game is paused
+        if (pauseMenu.gamePaused == true)
+        {
+            return;
+        }
+        
         //Get mouse input
         float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
         float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
@@ -35,5 +44,7 @@ public class MouseMovement : MonoBehaviour
 
         //Apply rotations
         transform.localRotation = Quaternion.Euler(xRotation, yRotation, 0f);
+
+        
     }
 }

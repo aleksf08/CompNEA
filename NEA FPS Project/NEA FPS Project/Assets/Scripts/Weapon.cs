@@ -28,6 +28,12 @@ public class Weapon : MonoBehaviour
     //Animator
     public Animator animator;
 
+    //UI Manager
+    public UIManager uiManager;
+
+    //Pause Menu
+    public PauseMenu PauseMenu;
+
     
     
 
@@ -44,6 +50,11 @@ public class Weapon : MonoBehaviour
 
     void Update()
     {
+        if (PauseMenu.gamePaused)
+        {
+            return;
+        }
+
         //shoot gun
         if (!shootingDisabled && Input.GetKeyDown(KeyCode.Mouse0))
         {
@@ -83,6 +94,11 @@ public class Weapon : MonoBehaviour
         shootingDisabled = true;
         currentAmmo--;
 
+        if (currentAmmo < magSize)
+        {
+            uiManager.UpdateKeybinds(1); // Highlight step 1 (Remove Mag)
+        }
+
         // Get the camera
         Camera cam = Camera.main;
 
@@ -107,6 +123,7 @@ public class Weapon : MonoBehaviour
         Invoke("ResetShooting", shootDelay);
 
 
+
     }
 
     
@@ -120,6 +137,7 @@ public class Weapon : MonoBehaviour
         tempAmmo = 0;
         Debug.Log("Magazine removed");
         animator.SetTrigger("REMOVE MAG");
+        uiManager.UpdateKeybinds(2); // Highlight step 2 (Insert Bullet)
 
 
         // While mag is removed, let player press F to add bullets and G to insert mag
@@ -131,6 +149,7 @@ public class Weapon : MonoBehaviour
                 Debug.Log("Bullet loaded into magazine. tempAmmo=" + tempAmmo);
                 animator.SetTrigger("INSERT BULLET");
                 animator.Play("Weapon Insert Bullet", 0, 0f);
+                uiManager.UpdateKeybinds(3); // Highlight step 3 (Insert Mag)
             }
 
             if (Input.GetKeyDown(KeyCode.G) && tempAmmo > 0)
@@ -140,6 +159,7 @@ public class Weapon : MonoBehaviour
                 magRemoved = false;
                 Debug.Log("Magazine inserted. Ammo=" + currentAmmo);
                 animator.SetTrigger("INSERT MAG");
+                uiManager.UpdateKeybinds(4); // Highlight step 4 (Cock Gun)
             }
             yield return null;
         }
@@ -153,6 +173,7 @@ public class Weapon : MonoBehaviour
                 cocked = true;
                 Debug.Log("Gun cocked");
                 animator.SetTrigger("COCK GUN");
+                uiManager.UpdateKeybinds(0);
             }
             yield return null;
         }
