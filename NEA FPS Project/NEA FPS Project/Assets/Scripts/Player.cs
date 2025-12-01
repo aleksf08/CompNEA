@@ -6,6 +6,8 @@ public class Player : MonoBehaviour
     public int maxHealth;
     public int currentHealth;
 
+    public GameOverManager gameOverManager;
+
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -18,5 +20,15 @@ public class Player : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public void TakeDamage(int damage)
+    {
+        currentHealth -= damage;
+
+        if (currentHealth <= 0)
+        {
+            gameOverManager.TriggerGameOver();
+        }
     }
 }
