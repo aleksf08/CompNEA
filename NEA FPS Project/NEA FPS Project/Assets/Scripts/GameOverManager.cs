@@ -31,7 +31,7 @@ public class GameOverManager : MonoBehaviour
         Cursor.visible = true;
 
         //Display stats
-        waveText.text = "You survived to wave" + waveManager.currentWave + "!";
+        waveText.text = "You survived to wave " + waveManager.currentWave + "!";
         killsText.text = "You killed " + waveManager.enemiesKilled + " enemies!";
     }
 

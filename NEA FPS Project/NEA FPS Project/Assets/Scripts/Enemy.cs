@@ -9,12 +9,15 @@ public class Enemy : MonoBehaviour
     public float timeBetweenShots;
     private float firetimer; 
     private float enemyHealth;
+    public WaveManager waveManager;
 
     void Start()
     {
         timeBetweenShots = 2f;
         firetimer = timeBetweenShots;
         enemyHealth = 100f;
+
+        waveManager = GameObject.Find("GameManager").GetComponent<WaveManager>();
     }
 
     void Update()
@@ -47,6 +50,7 @@ public class Enemy : MonoBehaviour
         if (enemyHealth <= 0f)
         {
             Destroy(gameObject);
+            waveManager.AddKill();
         }
     }
 
