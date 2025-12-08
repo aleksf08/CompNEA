@@ -7,7 +7,7 @@ public class WaveManager : MonoBehaviour
     public GameObject enemyPrefab;
     public Transform[] spawnPoints;
 
-    public int baseEnemyCount = 3;
+    public int baseEnemyCount = 1;
     public int timeBetweenWaves = 5;
 
     public int currentWave = 0;
